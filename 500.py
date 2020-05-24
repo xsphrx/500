@@ -62,11 +62,10 @@ def pick_from_pile():
     rearrange_cards()
 
 def sort():
+    print('sorting')
     player.sort(key=lambda x: (x.suit, x.rank))
     rearrange_cards()
 
-def meld_lay_off(option):
-    option.change_text('Finish')
 
 
 
@@ -91,6 +90,11 @@ class Option(pygame.sprite.Sprite):
 
     def change_text(self, text):
         self.text = text
+        self.image.fill((255,255,255))
+        pygame.draw.rect(self.image, (0,0,0), (0,0,100,30), 1)
+        n = font_option.render(self.text, True, (0,0,0))
+        text_rect = n.get_rect(center=(self.image.get_width()/2, self.image.get_height()/2))
+        self.image.blit(n, text_rect)
 
     def move_to(self, x, y):
         self.rect.center = (x,y)
@@ -202,6 +206,8 @@ def main():
 
     rearrange_cards()
 
+    game = {'player_round': 1, }
+
     # Event loop
     while 1:
         # Make sure game doesn't run at more than 60 frames per second
@@ -224,7 +230,7 @@ def main():
                 clicked_options = [s for s in options if s.rect.collidepoint(pos)]
                 clicked_option = next(iter(clicked_options), None)
                 if clicked_option in options:
-                    if clicked_option.text == 'sort':
+                    if clicked_option.text == 'Sort':
                         print('sort')
                         sort()
                     elif clicked_option.text == 'Meld / Lay off':
@@ -235,6 +241,9 @@ def main():
         cards.draw(screen)
         options.draw(screen)
         pygame.display.flip()
+
+def meld_lay_off(option):
+    option.change_text('Finish')
 
 
 if __name__ == '__main__': main()
